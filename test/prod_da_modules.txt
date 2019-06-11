@@ -1,0 +1,50 @@
+################################################
+# script : 	prod_da_modules
+#################################################
+import time
+import base64
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.common.exceptions import UnexpectedAlertPresentException
+from selenium.common.exceptions import NoAlertPresentException
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver import ActionChains
+import unittest, time, re
+from selenium.webdriver.common.keys import Keys
+# actions.key_down(Keys.CONTROL) .click(STatus).perform()
+
+
+location2 = "http://testmachine:5000/da"
+driver = webdriver.Firefox(executable_path=r'C:\Users\mee\Documents\webdrivers\geckodriver.exe')
+driver.maximize_window()
+try:
+    driver.get(location2)
+    element = WebDriverWait(driver, 15).until(EC.presence_of_element_located((By.ID, "Login_0")) )
+    time.sleep(5)
+except   UnexpectedAlertPresentException:
+    print "XSS - DOCUMNEUM LOGING INTO THE PROD DA INPROGRESS  ***********"
+    print("**********************************************")
+    time.sleep(5)
+    print("Accessing  and extracting user loging info ***************************")
+    dauser = r"C:\Python27\da-testing-login-python\da_user.txt"
+    with open(dauser , 'r') as  psfile:
+        user = [ base64.b64decode(line)  for line in psfile]
+        driver.find_element_by_id("LoginUsername").send_keys(user)
+        time.sleep(2)
+    print("Generating encrypted passord **************************************************")
+    Lpass = r"C:\Python27\da-testing-login-python\my_pass.txt"
+    with open(Lpass, 'r') as psfile:
+        password = [base64.b64decode(line) for line in psfile]
+    print("Logging into the da *****************************")
+    driver.find_element_by_id("LoginPassword").send_keys(password)
+    time.sleep(2)
+    print("Validating Login in button and sending that info ")
+    time.sleep(2)
+    Xpath = "/html/body/form/div/div[3]/div/div[2]/button"
+    Button = driver.find_element_by_xpath(Xpath).click()
+    print("Login  Succcessful")
+    print("DaIndexing LoGin()")
+    time.sleep(10)
