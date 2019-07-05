@@ -1,4 +1,5 @@
-
+# script is for motion detector { not written by me .....got it online }
+# added it here for edi=ucational purposes 
 
 
 #!/usr/bin/python
